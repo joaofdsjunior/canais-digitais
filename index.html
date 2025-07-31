@@ -251,16 +251,16 @@
              <p class="text-xs text-center text-gray-400 mt-4">Comparativo de melhora na eficiência (Jun vs. Jan)</p>
         </section>
 
-        <!-- NOVO BLOCO ADICIONADO -->
+        <!-- BLOCO ATUALIZADO (COMBINADO) -->
         <section class="main-card">
-            <h2 class="text-3xl font-bold text-center mb-2 text-[#374c80]">Variação Mensal do TMR por Área</h2>
+            <h2 class="text-3xl font-bold text-center mb-2 text-[#374c80]">Análise de Performance de TMR por Área (Jan-Jun)</h2>
             <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">
-                Este gráfico de linhas mostra a oscilação percentual do TMR de cada área em comparação com o mês anterior, indicando picos de melhora ou piora na agilidade.
+                O gráfico combinado mostra a mediana do TMR em horas (colunas) e a variação percentual mensal (linhas), permitindo correlacionar o tempo de resposta absoluto com sua oscilação de performance.
             </p>
             <div>
-                <h3 class="text-xl font-bold text-center">Variação Percentual Mês a Mês do TMR</h3>
+                <h3 class="text-xl font-bold text-center">TMR Mediano vs. Variação Percentual Mensal</h3>
                 <div class="chart-container">
-                    <canvas id="monthlyTmrVariationChart"></canvas>
+                    <canvas id="combinedTmrChart"></canvas>
                 </div>
             </div>
         </section>
@@ -274,19 +274,6 @@
                 <h3 class="text-xl font-bold text-center">Comparativo mensal: Respostas vs. Interações totais vs. TMR</h3>
                 <div class="chart-container">
                     <canvas id="combinedVolumeChart"></canvas>
-                </div>
-            </div>
-        </section>
-        
-        <section class="main-card">
-            <h2 class="text-3xl font-bold text-center mb-2 text-[#374c80]">Mediana Mensal do TMR por Área</h2>
-            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">
-                A eficiência de resposta varia conforme a complexidade tratada por cada departamento. Este gráfico mostra a evolução do TMR para cada área da Suridata. A linha será interrompida em Julho pela ausência de dados de TMR.
-            </p>
-            <div>
-                 <h3 class="text-xl font-bold text-center">TMR mediano mensal por área Suridata</h3>
-                <div class="chart-container">
-                    <canvas id="monthlyTmrByDeptChart"></canvas>
                 </div>
             </div>
         </section>
@@ -419,60 +406,61 @@
             });
         }
         
-        // Monthly TMR by Department Chart
-        const monthlyTmrDeptCtx = document.getElementById('monthlyTmrByDeptChart');
-        if (monthlyTmrDeptCtx) {
-            new Chart(monthlyTmrDeptCtx, {
-                type: 'line',
+        // GRÁFICO COMBINADO: TMR Mediano (Colunas) vs Variação % (Linhas)
+        const combinedTmrCtx = document.getElementById('combinedTmrChart');
+        if (combinedTmrCtx) {
+            new Chart(combinedTmrCtx, {
+                type: 'bar',
                 data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'], 
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
                     datasets: [
-                        { label: 'Canais Digitais', data: [2.8, 2.6, 2.7, 2.5, 2.4, 2.3, null], borderColor: '#003f5c', backgroundColor: '#003f5c', tension: 0.1 },
-                        { label: 'Dir. Tecnologia', data: [20, 18, 22, 17, 19, 16, null], borderColor: '#ef5675', backgroundColor: '#ef5675', tension: 0.1 },
-                        { label: 'Dir. Saúde', data: [14, 13, 15, 12, 11.5, 11, null], borderColor: '#7a5195', backgroundColor: '#7a5195', tension: 0.1 },
-                        { label: 'Treinamento Saúde', data: [7, 6, 6.5, 5.5, 5, 4.8, null], borderColor: '#ffa600', backgroundColor: '#ffa600', tension: 0.1 },
-                        { label: 'Sucesso do Cliente', data: [4.8, 4.9, 4.5, 4.6, 4.3, 4.1, null], borderColor: '#bc5090', backgroundColor: '#bc5090', tension: 0.1 },
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, ...tooltipConfig,
-                    plugins: { 
-                        ...tooltipConfig.plugins,
-                        legend: { position: 'bottom' },
-                        datalabels: { display: false } 
-                    },
-                    scales: { y: { beginAtZero: true, title: { display: true, text: 'TMR mediano (horas)' } } }
-                }
-            });
-        }
-
-        // NOVO GRÁFICO: Variação Mensal do TMR
-        const monthlyTmrVariationCtx = document.getElementById('monthlyTmrVariationChart');
-        if (monthlyTmrVariationCtx) {
-            new Chart(monthlyTmrVariationCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                    datasets: [
-                        { label: 'Canais Digitais', data: [-7.14, 3.85, -7.41, -4.00, -4.17], borderColor: '#003f5c', backgroundColor: '#003f5c', tension: 0.1, fill: false },
-                        { label: 'Dir. Tecnologia', data: [-10.00, 22.22, -22.73, 11.76, -15.79], borderColor: '#ef5675', backgroundColor: '#ef5675', tension: 0.1, fill: false },
-                        { label: 'Dir. Saúde', data: [-7.14, 15.38, -20.00, -4.17, -4.35], borderColor: '#7a5195', backgroundColor: '#7a5195', tension: 0.1, fill: false },
-                        { label: 'Treinamento Saúde', data: [-14.29, 8.33, -15.38, -9.09, -4.00], borderColor: '#ffa600', backgroundColor: '#ffa600', tension: 0.1, fill: false },
-                        { label: 'Sucesso do Cliente', data: [2.08, -8.16, 2.22, -6.52, -4.65], borderColor: '#bc5090', backgroundColor: '#bc5090', tension: 0.1, fill: false }
+                        // TMR Mediano (Barras)
+                        { type: 'bar', label: 'TMR - Canais Digitais', data: [2.8, 2.6, 2.7, 2.5, 2.4, 2.3], backgroundColor: 'rgba(0, 63, 92, 0.7)', yAxisID: 'y_hours' },
+                        { type: 'bar', label: 'TMR - Dir. Tecnologia', data: [20, 18, 22, 17, 19, 16], backgroundColor: 'rgba(239, 86, 117, 0.7)', yAxisID: 'y_hours' },
+                        { type: 'bar', label: 'TMR - Dir. Saúde', data: [14, 13, 15, 12, 11.5, 11], backgroundColor: 'rgba(122, 81, 149, 0.7)', yAxisID: 'y_hours' },
+                        { type: 'bar', label: 'TMR - Treinamento Saúde', data: [7, 6, 6.5, 5.5, 5, 4.8], backgroundColor: 'rgba(255, 166, 0, 0.7)', yAxisID: 'y_hours' },
+                        { type: 'bar', label: 'TMR - Sucesso do Cliente', data: [4.8, 4.9, 4.5, 4.6, 4.3, 4.1], backgroundColor: 'rgba(188, 80, 144, 0.7)', yAxisID: 'y_hours' },
+                        // Variação % (Linhas)
+                        { type: 'line', label: 'Variação % - Canais Digitais', data: [null, -7.14, 3.85, -7.41, -4.00, -4.17], borderColor: '#003f5c', yAxisID: 'y_percent', tension: 0.2, borderWidth: 2 },
+                        { type: 'line', label: 'Variação % - Dir. Tecnologia', data: [null, -10.00, 22.22, -22.73, 11.76, -15.79], borderColor: '#ef5675', yAxisID: 'y_percent', tension: 0.2, borderWidth: 2 },
+                        { type: 'line', label: 'Variação % - Dir. Saúde', data: [null, -7.14, 15.38, -20.00, -4.17, -4.35], borderColor: '#7a5195', yAxisID: 'y_percent', tension: 0.2, borderWidth: 2 },
+                        { type: 'line', label: 'Variação % - Treinamento Saúde', data: [null, -14.29, 8.33, -15.38, -9.09, -4.00], borderColor: '#ffa600', yAxisID: 'y_percent', tension: 0.2, borderWidth: 2 },
+                        { type: 'line', label: 'Variação % - Sucesso do Cliente', data: [null, 2.08, -8.16, 2.22, -6.52, -4.65], borderColor: '#bc5090', yAxisID: 'y_percent', tension: 0.2, borderWidth: 2 }
                     ]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false, ...tooltipConfig,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: {
-                        ...tooltipConfig.plugins,
-                        legend: { position: 'bottom' },
+                        // ATUALIZADO: Legenda habilitada
+                        legend: { 
+                            display: true, 
+                            position: 'bottom',
+                            labels: {
+                                // Filtra para mostrar apenas as legendas das barras
+                                filter: function(legendItem, chartData) {
+                                    return chartData.datasets[legendItem.datasetIndex].type === 'bar';
+                                }
+                            }
+                        },
                         datalabels: { display: false },
-                        tooltip: { callbacks: { label: function(context) { return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`; } } }
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.dataset.type === 'line') {
+                                        label += `${context.parsed.y.toFixed(2)}%`;
+                                    } else {
+                                        label += `${context.parsed.y}h`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
                     },
                     scales: {
-                        y: { 
-                            title: { display: true, text: 'Variação Percentual (%)' },
-                            ticks: { callback: function(value) { return value + '%'; } }
-                        }
+                        y_hours: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'TMR Mediano (horas)' } },
+                        y_percent: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Variação Mensal (%)' }, grid: { drawOnChartArea: false }, ticks: { callback: function(value) { return value + '%'; } } }
                     }
                 }
             });
